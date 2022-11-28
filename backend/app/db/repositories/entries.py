@@ -18,8 +18,6 @@ class EntryRepository(BaseRepository):
         self,
         *,
         entry_id: int,
-        operation: Operation,
-        user: Optional[User] = None,
     ) -> Entry:
         entry_row = await queries.get_entry_by_id(
             self.connection,
@@ -27,16 +25,14 @@ class EntryRepository(BaseRepository):
         )
         if entry_row:
             return await self._get_entry_from_db_record(
-                entry_row=entry_row,
-                author_username=entry_row["author_username"],
-                requested_user=user,
+                entry_row=entry_row
             )
 
         raise EntityDoesNotExist(
             "comment with id {0} does not exist".format(entry_id),
         )
 
-    async def get_comments_for_article(
+    async def get_entries_for_operation(
         self,
         *,
         operation: Operation,
@@ -49,8 +45,6 @@ class EntryRepository(BaseRepository):
         return [
             await self._get_entry_from_db_record(
                 entry_row=entry_row,
-                author_username=entry_row["author_username"],
-                requested_user=user,
             )
             for entry_row in entry_rows
         ]
@@ -60,38 +54,35 @@ class EntryRepository(BaseRepository):
         *,
         info: str,
         operation: Operation,
-        user: User,
+        retval: str,
     ) -> Entry:
+        # check if sess_id
         entry_row = await queries.create_new_entry(
             self.connection,
             info=info,
             sess_id=operation.sess_id,
-            author_username=user.username,
+            retval=retval
         )
         return await self._get_entry_from_db_record(
             entry_row=entry_row,
-            author_username=entry_row["author_username"],
-            requested_user=user,
         )
 
     async def delete_entry(self, *, entry: Entry) -> None:
         await queries.delete_entry_by_id(
             self.connection,
-            entry_id=entry.id_,
-            author_username=entry.ops.user.username,
+            entry_id=entry.id_
         )
 
     async def _get_entry_from_db_record(
         self,
         *,
         entry_row: Record,
-        author_username: str,
-        requested_user: Optional[User],
     ) -> Entry:
         return Entry(
             id_=entry_row["id"],
             info=entry_row["info"],
-            author=author_username,
+            retval=entry_row["retval"],
+            sess_id=entry_row["sess_id"],
             created_at=entry_row["created_at"],
             updated_at=entry_row["updated_at"],
         )

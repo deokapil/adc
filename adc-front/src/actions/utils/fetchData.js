@@ -3,7 +3,7 @@ const fetchData = async (
   dispatch
 ) => {
   const headers = token
-    ? { "Content-Type": "application/json", authorization: `Bearer ${token}` }
+    ? { "Content-Type": "application/json", authorization: `Token ${token}` }
     : { "Content-Type": "application/json" };
   body = body ? { body: JSON.stringify(body) } : {};
   try {

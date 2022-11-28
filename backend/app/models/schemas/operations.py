@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 
 from pydantic import BaseModel, Field
 
@@ -30,3 +30,10 @@ class OperationsFilters(BaseModel):
     author: Optional[str] = None
     limit: int = Field(DEFAULT_ARTICLES_LIMIT, ge=1)
     offset: int = Field(DEFAULT_ARTICLES_OFFSET, ge=0)
+
+
+class OperationNextInResponse(RWSchema):
+
+    bucket: str
+    envelops: List[str]
+    counts: Dict[str, int]

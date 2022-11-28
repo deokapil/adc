@@ -37,10 +37,10 @@ class EntriesQueriesMixin:
         self, conn: Connection, *, entry_id: int
     ) -> Record: ...
     async def create_new_entry(
-        self, conn: Connection, *, info: str, sess_id: str, author_username: str
+        self, conn: Connection, *, info: str, sess_id: str, retval: str
     ) -> Record: ...
     async def delete_entry_by_id(
-        self, conn: Connection, *, entry_id: int, author_username: str
+        self, conn: Connection, *, entry_id: int
     ) -> None: ...
 
 class OperationsQueriesMixin:

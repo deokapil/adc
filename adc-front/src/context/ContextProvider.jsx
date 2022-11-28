@@ -6,12 +6,6 @@ const initialState = {
   openLogin: false,
   loading: false,
   alert: { open: false, severity: "info", message: "" },
-  updatedRoom: null,
-  rooms: [],
-  priceFilter: 50,
-  addressFilter: null,
-  room: null,
-  section: 0,
 };
 
 const Context = createContext(initialState);

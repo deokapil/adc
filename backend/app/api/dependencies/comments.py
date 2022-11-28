@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import Depends, HTTPException, Path
 from starlette import status
 
-from app.api.dependencies import articles, authentication, database
+from app.api.dependencies import operations, authentication, database
 from app.db.errors import EntityDoesNotExist
 from app.db.repositories.entries import CommentsRepository
 from app.models.domain.operation import Article
@@ -15,7 +15,7 @@ from app.services.comments import check_user_can_modify_comment
 
 async def get_comment_by_id_from_path(
     comment_id: int = Path(..., ge=1),
-    article: Article = Depends(articles.get_article_by_slug_from_path),
+    article: Article = Depends(operations.get_article_by_slug_from_path),
     user: Optional[User] = Depends(
         authentication.get_current_user_authorizer(required=False),
     ),

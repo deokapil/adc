@@ -1,16 +1,17 @@
 from typing import List
 
-from app.models.domain.entry import Entries
+from app.models.domain.entry import Entry
 from app.models.schemas.rwschema import RWSchema
 
 
 class ListOfEntriesInResponse(RWSchema):
-    entries: List[Entries]
+    entries: List[Entry]
 
 
-class EntriesInResponse(RWSchema):
-    entry: Entries
+class EntryInResponse(RWSchema):
+    entry: Entry
 
 
-class EntriesInCreate(RWSchema):
-    body: str
+class EntryInCreate(RWSchema):
+    info: str
+

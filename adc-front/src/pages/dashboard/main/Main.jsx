@@ -1,29 +1,15 @@
-import {
-  Avatar,
-  Box,
-  Stack,
-  Divider,
-  InputAdornment,
-  List,
-  ListItem,
-  ListItemText,
-  Paper,
-  TextField,
-  Typography,
-  IconButton,
-} from "@mui/material";
+import { Box, Stack, Divider, Paper } from "@mui/material";
 import React from "react";
-import { useValue } from "../../../context/ContextProvider";
-import ImageIcon from "@mui/icons-material/Image";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ScanForm from "../../../components/forms/ScanForm";
+import ShipperForm from "../../../components/forms/ShipperForm";
+import ShipperInfo from "../../../components/forms/ShipperInfo";
+import { useScanList } from "../../../context/ScanContext";
 
 const Main = () => {
   const {
-    state: { currentUser },
-    dispatch,
-  } = useValue();
+    state: { scannedList, ...rest },
+    dispatch: listDispatch,
+  } = useScanList();
 
   return (
     <Box
@@ -37,55 +23,18 @@ const Main = () => {
       }}
     >
       <Paper elevation={3} sx={{ p: 2 }}>
-        <Stack direction="column" spacing={2}>
-          <TextField
-            label="Scan Id"
-            id="outlined-start-adornment"
-            sx={{ m: 1, width: "25ch" }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    edge="end"
-                  >
-                    <ArrowDownwardIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
+        <Stack
+          direction="row"
+          divider={<Divider orientation="vertical" flexItem />}
+          spacing={2}
+        >
+          <ScanForm
+            scannedList={scannedList}
+            listDispatch={listDispatch}
+            {...rest}
           />
-          <List
-            sx={{
-              width: "100%",
-              minHeight: 250,
-              maxHeight: 300,
-              overflow: "auto",
-              bgcolor: "background.paper",
-            }}
-          >
-            <ListItem>
-              <ListItemText primary="Photos Jan 9, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Photos Jan 9, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Photos Jan 9, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Photos Jan 9, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Photos Jan 9, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Work Jan 7, 2014" />
-            </ListItem>
-            <ListItem>
-              <ListItemText primary="Vacation July 20, 2014" />
-            </ListItem>
-          </List>
+          <ShipperForm scannedList={scannedList} listDispatch={listDispatch} />
+          <ShipperInfo />
         </Stack>
       </Paper>
     </Box>

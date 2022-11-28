@@ -1,39 +1,38 @@
 -- name: get-entries-for-operation-by-sess_id
 SELECT e.id,
        e.info,
+       a.sess_id,
        e.created_at,
-       e.updated_at,
-       (SELECT username FROM users WHERE id = e.author_id) as author_username
+       e.updated_at
 FROM entry e
          INNER JOIN operation a ON e.op_id = a.id ANd (a.sess_id = :sess_id);
 
 -- name: get-entry-by-id^
 SELECT e.id,
        e.info,
+       a.sess_id,
+       e.retval,
        e.created_at,
-       e.updated_at,
-       (SELECT username FROM users WHERE id = e.author_id) as author_username
+       e.updated_at
 FROM entry e
-WHERE e.id = :entries_id;
+    INNER JOIN operation a ON e.op_id = a.id;
+    WHERE e.id = :entries_id;
 
 -- name: create-new-entry<!
-WITH users_subquery AS (
-        (SELECT id, username FROM users WHERE username = :author_username)
-)
 INSERT
-INTO entry (info, author_id, op_id)
+INTO entry (info, op_id, retval)
 VALUES (:info,
-        (SELECT id FROM users_subquery),
-        (SELECT id FROM operations WHERE sess_id = :sess_id))
+        (SELECT id FROM operation WHERE sess_id = :sess_id),
+        :retval)
 RETURNING
     id,
     info,
-        (SELECT username FROM users_subquery) AS author_username,
+    :sess_id as sess_id,
+    retval,
     created_at,
     updated_at;
 
 -- name: delete-entry-by-id!
 DELETE
 FROM entry
-WHERE id = :entry_id
-  AND author_id = (SELECT id FROM users WHERE username = :author_username);
+WHERE id = :entry_id;

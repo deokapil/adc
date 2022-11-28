@@ -100,6 +100,7 @@ def create_entry_table() -> None:
         sa.Column(
             "op_id", sa.Integer, sa.ForeignKey("operation.id", ondelete="SET NULL")
         ),
+        sa.Column("retval", sa.Text),
         *timestamps(),
     )
     op.execute(

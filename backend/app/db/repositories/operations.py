@@ -1,6 +1,8 @@
 from typing import Optional
 
 from asyncpg import Connection, Record
+
+from app.db.errors import EntityDoesNotExist
 from app.db.queries.queries import queries
 
 from app.db.repositories.base import BaseRepository
@@ -17,6 +19,19 @@ class OperationRepository(BaseRepository):  # noqa: WPS214
     def __init__(self, conn: Connection) -> None:
         super().__init__(conn)
 
+    async def get_operation_by_sess_id(
+            self,
+            *,
+            sess_id: str,
+    ) -> Operation:
+        operation_row = await queries.get_operation_by_session(self.connection, sess_id=sess_id)
+        if operation_row:
+            return await self._get_operation_from_db_record(
+                operation_row=operation_row,
+            )
+
+        raise EntityDoesNotExist("article with slug {0} does not exist".format(sess_id))
+
     async def create_operation(  # noqa: WPS211
         self,
         *,
@@ -31,10 +46,7 @@ class OperationRepository(BaseRepository):  # noqa: WPS214
             )
 
         return await self._get_operation_from_db_record(
-            article_row=operation_row,
-            sess_id=sess_id,
-            author_username=operation_row[AUTHOR_USERNAME_ALIAS],
-            requested_user=author,
+            operation_row=operation_row,
         )
 
     async def delete_operation(self, *, operation: Operation) -> None:
@@ -42,22 +54,18 @@ class OperationRepository(BaseRepository):  # noqa: WPS214
             await queries.delete_operation(
                 self.connection,
                 sess_id=operation.sess_id,
-                author_username=operation.user.username,
+                author_username=operation.author,
             )
-
 
     async def _get_operation_from_db_record(
         self,
         *,
-        article_row: Record,
-        sess_id: str,
-        author_username: str,
-        requested_user: Optional[User],
+        operation_row: Record
     ) -> Operation:
         return Operation(
-            id_=article_row["id"],
-            sess_id=sess_id,
-            author=author_username,
-            created_at=article_row["created_at"],
-            updated_at=article_row["updated_at"],
+            id_=operation_row["id"],
+            sess_id=operation_row["sess_id"],
+            author=operation_row["author_username"],
+            created_at=operation_row["created_at"],
+            updated_at=operation_row["updated_at"],
         )

@@ -5,4 +5,5 @@ from app.models.domain.rwmodel import RWModel
 
 class Entry(IDModelMixin, DateTimeModelMixin, RWModel):
     info: str
-    ops: Operation
+    sess_id: str
+    retval: str

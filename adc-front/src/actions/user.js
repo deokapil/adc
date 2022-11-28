@@ -1,12 +1,13 @@
 import fetchData from "./utils/fetchData";
 
-const url = "http://localhost:8000/api/";
-
 export const login = async (user, dispatch) => {
   dispatch({ type: "START_LOADING" });
 
   const result = await fetchData(
-    { url: url + "auth/login", body: { user } },
+    {
+      url: `${import.meta.env.VITE_APP_SERVER_URL}/auth/login`,
+      body: { user },
+    },
     dispatch
   );
   if (result?.user) {
@@ -21,4 +22,7 @@ export const login = async (user, dispatch) => {
   }
 
   dispatch({ type: "END_LOADING" });
+};
+export const logout = (dispatch) => {
+  dispatch({ type: "UPDATE_USER", payload: null });
 };
