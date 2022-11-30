@@ -14,7 +14,7 @@ import { useValue } from "./../../context/ContextProvider";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import FormHeader from "./FormHeader";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import { createSession, scanSubmit } from "../../actions/scan";
+import { createSession, scanSubmit, updateSession } from "../../actions/scan";
 
 const ScanForm = ({ scannedList, listDispatch, sessionId }) => {
   const {
@@ -31,8 +31,16 @@ const ScanForm = ({ scannedList, listDispatch, sessionId }) => {
     scanRef.current.value = "";
     scanRef.current.focus();
   };
+  const submitSession = async () => {
+    await updateSession(sessionId, dispatch, listDispatch, currentUser);
+  };
   const nxtBtn = (
-    <Button color="primary" variant="contained" endIcon={<MailOutlineIcon />}>
+    <Button
+      color="primary"
+      variant="contained"
+      endIcon={<MailOutlineIcon />}
+      onClick={submitSession}
+    >
       Next
     </Button>
   );

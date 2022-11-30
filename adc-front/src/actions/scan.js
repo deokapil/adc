@@ -61,19 +61,24 @@ export const createSession = async (dispatch, listDispatch, currentUser) => {
   return result.operation.sessId;
 };
 
-export const createSession = async (dispatch, listDispatch, currentUser) => {
+export const updateSession = async (
+  sessionId,
+  dispatch,
+  listDispatch,
+  currentUser
+) => {
   dispatch({ type: "START_LOADING" });
   const result = await fetchData(
     {
-      url: `${import.meta.env.VITE_APP_SERVER_URL}/operations`,
-      body: {},
+      url: `${import.meta.env.VITE_APP_SERVER_URL}/operations/next`,
+      body: { sessionId },
       token: currentUser?.token,
     },
     dispatch
   );
   if (result?.operation) {
     await listDispatch({
-      type: "NEW_SESSION",
+      type: "NEXT_ENVELOPE",
       payload: result.operation.sessId,
     });
   }

@@ -11,6 +11,8 @@ const scanReducer = (state, action) => {
       return { ...state, sessionId: null, scannedList: [] };
     case "NEW_SESSION":
       return { ...state, sessionId: action.payload };
+    case "NEXT_SESSION":
+      return { ...state, sessionId: null, scannedList: [] };
     default:
       throw new Error("No matched action!");
   }

@@ -33,7 +33,7 @@ async def create_new_operation(
     return OperationInResponse(operation=operation)
 
 @router.post(
-    "next",
+    "/next",
     status_code=status.HTTP_201_CREATED,
     response_model=OperationNextInResponse,
     name="operations:create-operation-next",
